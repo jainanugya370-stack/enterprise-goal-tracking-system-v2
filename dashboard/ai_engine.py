@@ -1,5 +1,31 @@
+import google.generativeai as genai
+
+from django.conf import settings
+
 from goals.models import Goal, GoalUpdate
 
+
+genai.configure(
+    api_key="AIzaSyDlar1FFJyzl7nXpjD0XXO1jRDHWJaM8TU"
+)
+
+model = genai.GenerativeModel(
+    'models/text-bison-001'
+)
+
+def generate_ai_insights(prompt):
+
+    try:
+
+        response = model.generate_text(
+            prompt=prompt
+        )
+
+        return response.text
+
+    except Exception as e:
+
+        return f"AI Error: {str(e)}"
 
 def generate_employee_insight(employee):
 
@@ -17,7 +43,25 @@ def generate_employee_insight(employee):
 
     total_achievement = 0
 
+    goal_summary = ""
+
+    update_summary = ""
+
     for goal in goals:
+
+        goal_summary += f"""
+
+        Goal Title: {goal.title}
+
+        Description: {goal.description}
+
+        Target: {goal.target}
+
+        Weightage: {goal.weightage}
+
+        Status: {goal.status}
+
+        """
 
         latest_update = GoalUpdate.objects.filter(
             goal=goal
@@ -29,8 +73,22 @@ def generate_employee_insight(employee):
 
             total_achievement += achievement
 
+            update_summary += f"""
+
+            Quarter: {latest_update.quarter}
+
+            Achievement Value:
+            {latest_update.achievement_value}
+
+            Employee Comment:
+            {latest_update.employee_comment}
+
+            """
+
             if achievement >= goal.target:
+
                 completed_goals += 1
+
 
     average_achievement = 0
 
@@ -40,35 +98,73 @@ def generate_employee_insight(employee):
             total_achievement / total_goals
         )
 
-    # AI Insight Logic
+    prompt = f"""
 
-    if average_achievement >= 80:
+    You are an enterprise AI HR assistant.
 
-        performance = "excellent"
+    Analyze this employee professionally.
 
-    elif average_achievement >= 50:
+    EMPLOYEE:
+    {employee.username}
 
-        performance = "good"
+    TOTAL GOALS:
+    {total_goals}
 
-    else:
+    APPROVED GOALS:
+    {approved_goals}
 
-        performance = "needs improvement"
+    COMPLETED GOALS:
+    {completed_goals}
 
-    insight = f"""
+    AVERAGE ACHIEVEMENT:
+    {round(average_achievement, 2)}%
 
-    Employee currently has {total_goals} active goals.
+    GOAL DETAILS:
+    {goal_summary}
 
-    {approved_goals} goals are approved.
+    QUARTERLY UPDATES:
+    {update_summary}
 
-    Overall performance trend is {performance}.
+    Generate:
 
-    Completed goals count: {completed_goals}.
+    1. Performance Summary
 
-    Average achievement score is {round(average_achievement, 2)}%.
+    2. Productivity Analysis
 
-    Recommended focus:
-    improve consistency and quarterly execution.
+    3. Goal Achievement Review
 
+    4. Strengths
+
+    5. Weaknesses
+
+    6. Performance Risk Level
+
+    7. Coaching Suggestions
+
+    8. Manager Recommendations
+
+    9. Growth Potential
+
+    Keep response professional.
     """
 
-    return insight
+    ai_response = generate_ai_insights(
+        prompt
+    )
+
+    return {
+
+        "total_goals": total_goals,
+
+        "approved_goals": approved_goals,
+
+        "completed_goals": completed_goals,
+
+        "average_achievement": round(
+            average_achievement,
+            2
+        ),
+
+        "ai_response": ai_response
+
+    }
