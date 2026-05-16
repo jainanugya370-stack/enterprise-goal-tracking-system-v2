@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
 
-    <!-- HERO SECTION -->
+    <!-- PAGE HEADER -->
 
     <div class="d-flex justify-content-between align-items-center mb-5">
 
@@ -15,14 +15,17 @@
             </h1>
 
             <p class="page-subtitle">
-                Track goals, monitor performance and manage progress.
+                Track goals, monitor performance and manage progress efficiently.
             </p>
 
         </div>
 
         <div>
 
-            <a href="/goals/my-goals/" class="btn-modern">
+            <a
+                href="/goals/my-goals/"
+                class="btn-modern"
+            >
                 My Goals
             </a>
 
@@ -34,7 +37,9 @@
 
     <div class="row g-4 mb-5">
 
-        <div class="col-md-4">
+        <!-- ACTIVE GOALS -->
+
+        <div class="col-xl-4 col-md-6">
 
             <div class="kpi-card">
 
@@ -50,7 +55,9 @@
 
         </div>
 
-        <div class="col-md-4">
+        <!-- PERFORMANCE SCORE -->
+
+        <div class="col-xl-4 col-md-6">
 
             <div class="kpi-card">
 
@@ -66,7 +73,9 @@
 
         </div>
 
-        <div class="col-md-4">
+        <!-- COMPLETED GOALS -->
+
+        <div class="col-xl-4 col-md-12">
 
             <div class="kpi-card">
 
@@ -84,40 +93,121 @@
 
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN DASHBOARD SECTION -->
 
     <div class="row g-4">
 
-        <!-- LEFT CARD -->
+        <!-- LEFT PANEL -->
 
         <div class="col-lg-8">
 
-            <div class="card-modern">
+            <div class="card-modern h-100">
 
-                <h3 class="mb-4">
-                    Goal Progress Overview
-                </h3>
+                <div class="d-flex justify-content-between align-items-start mb-4">
 
-                <p class="text-muted mb-4">
-                    Manage your assigned goals, submit updates and track achievements.
-                </p>
+                    <div>
 
-                <div class="d-flex gap-3">
+                        <h3 class="mb-2">
+                            Goal Progress Overview
+                        </h3>
 
-                    <a href="/goals/my-goals/"
-                       class="btn-modern">
+                        <p class="text-muted mb-0">
+                            Manage assigned goals, monitor updates and track achievements across all performance metrics.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+
+                    <a
+                        href="/goals/my-goals/"
+                        class="btn-modern"
+                    >
                         View My Goals
                     </a>
 
-                    <a href="/dashboard/employee-analytics/"
-                       class="btn btn-light border rounded-4 px-4">
+                    <a
+                        href="/dashboard/employee-analytics/"
+                        class="btn btn-light border rounded-4 px-4 py-2"
+                    >
                         View Analytics
                     </a>
 
-                    <a href="/reports/employee-pdf/"
-                        class="btn btn-dark rounded-4 px-4">
-                        Export PDF Report
+                    <a
+                        href="/reports/employee-pdf/"
+                        class="btn btn-dark rounded-4 px-4 py-2"
+                    >
+                        Export PDF
                     </a>
+
+                    <a
+                        href="{% url 'ai_insights' %}"
+                        class="btn btn-outline-dark rounded-4 px-4 py-2"
+                    >
+                        🤖 AI Insights
+                    </a>
+
+                </div>
+
+                <!-- MINI STATS -->
+
+                <div class="row mt-5 g-4">
+
+                    <div class="col-md-6">
+
+                        <div class="ai-insight-box">
+
+                            <h5 class="mb-3">
+                                Productivity Status
+                            </h5>
+
+                            <p class="text-muted mb-3">
+                                You are currently maintaining a strong performance trend this month.
+                            </p>
+
+                            <div class="progress"
+                                 style="height:10px; border-radius:999px;">
+
+                                <div
+                                    class="progress-bar"
+                                    style="width:82%;">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="ai-insight-box">
+
+                            <h5 class="mb-3">
+                                Goal Completion
+                            </h5>
+
+                            <p class="text-muted mb-3">
+                                Most assigned goals are currently on track for completion.
+                            </p>
+
+                            <div class="progress"
+                                 style="height:10px; border-radius:999px;">
+
+                                <div
+                                    class="progress-bar bg-dark"
+                                    style="width:68%;">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -125,47 +215,73 @@
 
         </div>
 
-        <!-- RIGHT CARD -->
+        <!-- RIGHT PANEL -->
 
         <div class="col-lg-4">
 
-            <div class="card-modern">
+            <div class="card-modern h-100">
 
-                <h5 class="mb-3">
-                    Performance Status
-                </h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <div class="mb-3">
+                    <div>
 
-                    <small class="text-muted">
-                        Monthly Progress
-                    </small>
+                        <h4 class="mb-1">
+                            Performance Status
+                        </h4>
 
-                    <div class="progress mt-2"
-                         style="height:10px; border-radius:20px;">
-
-                        <div class="progress-bar"
-                             style="width:78%;">
-                        </div>
+                        <p class="text-muted mb-0">
+                            Current monthly progress.
+                        </p>
 
                     </div>
 
                 </div>
 
-                <div class="mt-4">
+                <!-- STATUS CARD -->
 
-                    <small class="text-muted">
-                        Goal Completion
-                    </small>
+                <div class="ai-insight-box mb-4">
 
-                    <div class="progress mt-2"
-                         style="height:10px; border-radius:20px;">
+                    <h6 class="mb-3">
+                        Monthly Progress
+                    </h6>
 
-                        <div class="progress-bar bg-dark"
-                             style="width:65%;">
+                    <div class="progress mb-3"
+                         style="height:12px; border-radius:999px;">
+
+                        <div
+                            class="progress-bar"
+                            style="width:78%;">
                         </div>
 
                     </div>
+
+                    <small class="text-muted">
+                        78% performance achieved this month.
+                    </small>
+
+                </div>
+
+                <!-- STATUS CARD -->
+
+                <div class="ai-insight-box">
+
+                    <h6 class="mb-3">
+                        Goal Completion
+                    </h6>
+
+                    <div class="progress mb-3"
+                         style="height:12px; border-radius:999px;">
+
+                        <div
+                            class="progress-bar bg-dark"
+                            style="width:65%;">
+                        </div>
+
+                    </div>
+
+                    <small class="text-muted">
+                        65% goals successfully completed.
+                    </small>
 
                 </div>
 
