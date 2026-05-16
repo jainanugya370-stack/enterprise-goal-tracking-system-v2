@@ -9,6 +9,73 @@ from goals.utils import (
 from accounts.models import User
 from .ai_engine import generate_employee_insight
 from accounts.models import Department
+from django.shortcuts import render
+from goals.models import Goal, GoalUpdate
+from dashboard.ai_engine import generate_ai_insights
+from dashboard.utils.prompt_builder import build_employee_analysis_prompt
+
+
+def ai_employee_insights(request):
+
+    employee = request.user
+
+    # Fetch employee goals
+    goals = Goal.objects.filter(
+        employee=employee
+    )
+
+    # Fetch employee quarterly updates
+    updates = GoalUpdate.objects.filter(
+        goal__employee=employee
+    )
+
+    # Build goal text for AI
+    goal_text = ""
+
+    for goal in goals:
+
+        goal_text += f"""
+        Goal Title: {goal.title}
+        Description: {goal.description}
+        Target: {goal.target}
+        Weightage: {goal.weightage}
+        Status: {goal.status}
+
+        """
+
+    # Build update text for AI
+    update_text = ""
+
+    for update in updates:
+
+        update_text += f"""
+        Quarter: {update.quarter}
+        Achievement Value: {update.achievement_value}
+        Employee Comment: {update.employee_comment}
+
+        """
+
+    # Generate AI Prompt
+    prompt = build_employee_analysis_prompt(
+        employee,
+        goal_text,
+        update_text
+    )
+
+    # Generate AI Result
+    ai_result = generate_ai_insights(prompt)
+
+    context = {
+        "ai_result": ai_result,
+        "goals": goals,
+        "updates": updates,
+    }
+
+    return render(
+        request,
+        "dashboard/ai_insights.html",
+        context
+    )
 
 @login_required
 def employee_dashboard(request):

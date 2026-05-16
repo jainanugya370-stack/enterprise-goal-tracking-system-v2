@@ -39,4 +39,10 @@ urlpatterns = [
         name='department_analytics'
     ),
 
+    path(
+        'ai-insights/',
+        views.ai_employee_insights,
+        name='ai_insights'
+    ),
+
 ]
