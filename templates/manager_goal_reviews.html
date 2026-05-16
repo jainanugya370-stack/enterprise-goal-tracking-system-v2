@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+        <div>
+
+            <h1 class="page-title">
+                Manager Goal Reviews
+            </h1>
+
+            <p class="page-subtitle">
+                Approve, reject and review employee goals.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-modern">
+
+        <table class="table-modern">
+
+            <thead>
+
+                <tr>
+
+                    <th>Employee</th>
+                    <th>Goal</th>
+                    <th>Weightage</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for goal in team_goals %}
+
+                <tr>
+
+                    <td>
+                        {{ goal.employee.username }}
+                    </td>
+
+                    <td>
+                        {{ goal.title }}
+                    </td>
+
+                    <td>
+                        {{ goal.weightage }}%
+                    </td>
+
+                    <td>
+
+                        <span class="badge-modern badge-success">
+                            {{ goal.status }}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="d-flex gap-2 flex-wrap">
+
+                            <a
+                                href="/goals/approve/{{ goal.id }}/"
+                                class="btn btn-sm btn-dark rounded-pill px-3"
+                            >
+                                Approve
+                            </a>
+
+                            <a
+                                href="/goals/reject/{{ goal.id }}/"
+                                class="btn btn-sm btn-outline-dark rounded-pill px-3"
+                            >
+                                Reject
+                            </a>
+
+                            <a
+                                href="/goals/checkin/{{ goal.id }}/"
+                                class="btn btn-sm btn-light border rounded-pill px-3"
+                            >
+                                Check-In
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

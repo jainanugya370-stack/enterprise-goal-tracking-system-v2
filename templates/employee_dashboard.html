@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- HERO SECTION -->
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+        <div>
+
+            <h1 class="page-title">
+                Employee Dashboard
+            </h1>
+
+            <p class="page-subtitle">
+                Track goals, monitor performance and manage progress.
+            </p>
+
+        </div>
+
+        <div>
+
+            <a href="/goals/my-goals/" class="btn-modern">
+                My Goals
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- KPI SECTION -->
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Active Goals
+                </div>
+
+                <div class="kpi-value">
+                    12
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Performance Score
+                </div>
+
+                <div class="kpi-value">
+                    87%
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Completed Goals
+                </div>
+
+                <div class="kpi-value">
+                    8
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="row g-4">
+
+        <!-- LEFT CARD -->
+
+        <div class="col-lg-8">
+
+            <div class="card-modern">
+
+                <h3 class="mb-4">
+                    Goal Progress Overview
+                </h3>
+
+                <p class="text-muted mb-4">
+                    Manage your assigned goals, submit updates and track achievements.
+                </p>
+
+                <div class="d-flex gap-3">
+
+                    <a href="/goals/my-goals/"
+                       class="btn-modern">
+                        View My Goals
+                    </a>
+
+                    <a href="/dashboard/employee-analytics/"
+                       class="btn btn-light border rounded-4 px-4">
+                        View Analytics
+                    </a>
+
+                    <a href="/reports/employee-pdf/"
+                        class="btn btn-dark rounded-4 px-4">
+                        Export PDF Report
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT CARD -->
+
+        <div class="col-lg-4">
+
+            <div class="card-modern">
+
+                <h5 class="mb-3">
+                    Performance Status
+                </h5>
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        Monthly Progress
+                    </small>
+
+                    <div class="progress mt-2"
+                         style="height:10px; border-radius:20px;">
+
+                        <div class="progress-bar"
+                             style="width:78%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+
+                    <small class="text-muted">
+                        Goal Completion
+                    </small>
+
+                    <div class="progress mt-2"
+                         style="height:10px; border-radius:20px;">
+
+                        <div class="progress-bar bg-dark"
+                             style="width:65%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

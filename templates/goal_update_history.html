@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h1 class="page-title">
+            Goal Update History
+        </h1>
+
+        <p class="page-subtitle">
+            {{ goal.title }}
+        </p>
+
+    </div>
+
+    <div class="card-modern">
+
+        <div class="table-responsive">
+
+            <table class="table-modern">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Quarter</th>
+                        <th>Achievement</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for update in updates %}
+
+                    <tr>
+
+                        <td>{{ update.quarter }}</td>
+
+                        <td>{{ update.achievement_value }}</td>
+
+                        <td>{{ update.employee_comment }}</td>
+
+                        <td>{{ update.updated_at }}</td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            No updates recorded yet.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+
+        <a
+            href="/goals/my-goals/"
+            class="btn btn-light border rounded-pill px-4"
+        >
+            &larr; Back to Goals
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

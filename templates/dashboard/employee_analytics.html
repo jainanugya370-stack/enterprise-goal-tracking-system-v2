@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid">
+
+    <!-- PAGE HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4" style="padding-top:8px;">
+
+        <div>
+
+            <h1 class="page-title">
+                Employee Analytics
+            </h1>
+
+            <p class="page-subtitle">
+                Track performance metrics, achievements and overall productivity.
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="/goals/my-goals/"
+                class="btn-modern"
+            >
+                Back to Goals
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- KPI SECTION -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Total Goals
+                </div>
+
+                <div class="kpi-value">
+                    {{ total_goals }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Completed Goals
+                </div>
+
+                <div class="kpi-value">
+                    {{ completed_goals }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Performance Score
+                </div>
+
+                <div class="kpi-value">
+                    {{ performance_score }}%
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="kpi-card">
+
+                <div class="kpi-title">
+                    Rating
+                </div>
+
+                <div class="kpi-value" id="ratingValue">
+                    {{ performance_rating }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHARTS ROW -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- BAR CHART -->
+
+        <div class="col-lg-8">
+
+            <div class="card-modern h-100">
+
+                <h4 class="mb-1" style="font-size:17px;font-weight:700;">
+                    Goal Achievement Analytics
+                </h4>
+
+                <p class="text-muted mb-0" style="font-size:13px;">
+                    Performance breakdown across all goals.
+                </p>
+
+                <canvas id="goalChart" height="130" style="margin-top:20px;"></canvas>
+
+            </div>
+
+        </div>
+
+        <!-- DOUGHNUT CHART -->
+
+        <div class="col-lg-4">
+
+            <div class="card-modern h-100">
+
+                <h4 class="mb-1" style="font-size:17px;font-weight:700;">
+                    Goal Distribution
+                </h4>
+
+                <p class="text-muted mb-0" style="font-size:13px;">
+                    Completion percentage overview.
+                </p>
+
+                <div class="pie-wrap">
+
+                    <canvas id="pieChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PERFORMANCE SUMMARY -->
+
+    <div class="card-modern">
+
+        <h4 class="mb-1" style="font-size:17px;font-weight:700;">
+            Performance Summary
+        </h4>
+
+        <p class="text-muted mb-4" style="font-size:13px;">
+            Overview of your current productivity and achievement status.
+        </p>
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <div class="ai-insight-box">
+
+                    <h5 class="mb-3" style="font-size:15px;">
+                        Goal Completion Rate
+                    </h5>
+
+                    <div class="progress mb-3"
+                         style="height:10px; border-radius:999px;">
+
+                        <div
+                            class="progress-bar"
+                            style="width: {{ performance_score }}%;"
+                        ></div>
+
+                    </div>
+
+                    <p class="text-muted mb-0" style="font-size:13px;">
+
+                        You have completed
+                        <strong>{{ completed_goals }}</strong>
+                        out of
+                        <strong>{{ total_goals }}</strong>
+                        goals successfully.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="ai-insight-box">
+
+                    <h5 class="mb-3" style="font-size:15px;">
+                        Performance Rating
+                    </h5>
+
+                    <p class="mb-0">
+
+                        Current performance level:&nbsp;
+
+                        {% if performance_rating == 'Excellent' %}
+
+                            <span class="badge-modern badge-success">
+                                {{ performance_rating }}
+                            </span>
+
+                        {% elif performance_rating == 'Average' %}
+
+                            <span class="badge-modern badge-warning">
+                                {{ performance_rating }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge-modern badge-danger">
+                                {{ performance_rating }}
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const goalLabels = JSON.parse('{{ goal_labels|escapejs }}');
+const goalScores = JSON.parse('{{ goal_scores|escapejs }}');
+
+// Palette
+const PALETTE = [
+    '#111827','#374151','#6b7280','#9ca3af','#d1d5db',
+    '#1f2937','#4b5563','#6b7280','#111827','#374151'
+];
+
+// BAR CHART
+
+const barCtx = document.getElementById('goalChart').getContext('2d');
+
+new Chart(barCtx, {
+    type: 'bar',
+    data: {
+        labels: goalLabels.length ? goalLabels : ['No Data'],
+        datasets: [{
+            label: 'Achievement %',
+            data: goalScores.length ? goalScores : [0],
+            backgroundColor: PALETTE.slice(0, Math.max(goalLabels.length, 1)),
+            borderRadius: 8,
+            borderWidth: 0,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { stepSize: 20, font: { size: 12 } },
+                grid: { color: '#f1f5f9' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { font: { size: 12 } }
+            }
+        }
+    }
+});
+
+
+// DOUGHNUT CHART
+
+const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+        labels: goalLabels.length ? goalLabels : ['No Data'],
+        datasets: [{
+            data: goalScores.length ? goalScores : [1],
+            backgroundColor: goalScores.length ? PALETTE.slice(0, goalLabels.length) : ['#e5e7eb'],
+            borderWidth: 0,
+            hoverOffset: 6,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: { size: 12 },
+                    boxWidth: 12,
+                    padding: 14,
+                }
+            }
+        }
+    }
+});
+
+// Auto-shrink long rating text in KPI card
+var rv = document.getElementById('ratingValue');
+if (rv && rv.textContent.trim().length > 9) {
+    rv.classList.add('kpi-long');
+}
+
+</script>
+
+{% endblock %}

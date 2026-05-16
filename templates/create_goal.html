@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card-modern">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <div>
+
+                        <h1 class="page-title">
+                            Create Goal
+                        </h1>
+
+                        <p class="page-subtitle">
+                            Define performance goals and objectives.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="/goals/my-goals/"
+                        class="btn btn-light border rounded-pill px-4"
+                    >
+                        View Goals
+                    </a>
+
+                </div>
+
+                {% if error %}
+
+                <div class="alert alert-danger rounded-4">
+
+                    {{ error }}
+
+                </div>
+
+                {% endif %}
+
+                <form method="POST" class="form-modern">
+
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <button
+                        type="submit"
+                        class="btn-modern"
+                    >
+                        Save Goal
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
