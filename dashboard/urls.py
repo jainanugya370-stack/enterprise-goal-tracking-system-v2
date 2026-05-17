@@ -3,6 +3,13 @@ from . import views
 
 urlpatterns = [
 
+    # MAIN DEFAULT DASHBOARD
+    path(
+        '',
+        views.employee_dashboard,
+        name='dashboard'
+    ),
+
     path(
         'employee/',
         views.employee_dashboard,
