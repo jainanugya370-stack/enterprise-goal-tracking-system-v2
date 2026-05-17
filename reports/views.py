@@ -53,8 +53,6 @@ def export_employee_report(request):
 
     # AI INSIGHTS
 
-    # ✅ FIX: generate_employee_insight returns a dict, not a string.
-    # Extract the 'ai_response' key which holds the actual text.
     insight_data = generate_employee_insight(request.user)
     insight_text = insight_data.get('ai_response', 'AI insights unavailable.')
 
