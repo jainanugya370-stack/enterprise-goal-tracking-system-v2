@@ -145,14 +145,12 @@ def employee_dashboard(request):
             (approved_goals / total_goals) * 100, 2
         )
 
-    ai_insight = generate_employee_insight(request.user)
 
     context = {
         'total_goals':       total_goals,
         'approved_goals':    approved_goals,
         'completed_goals':   completed_goals,
         'performance_score': performance_score,
-        'ai_insight':        ai_insight,
     }
 
     return render(request, 'employee_dashboard.html', context)
