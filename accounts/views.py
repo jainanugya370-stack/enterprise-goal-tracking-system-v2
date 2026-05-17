@@ -41,37 +41,34 @@ def login_view(request):
 
             login(request, user)
 
-            # HR / ADMIN
+            # SUPERUSER
 
-            if (
-                user.role == 'hr'
-                or user.is_superuser
-            ):
+            if user.is_superuser:
 
-                return redirect(
-                    'admin_dashboard'
-                )
+                return redirect('admin_dashboard')
 
-            # MANAGER
+            # ROLE BASED USERS
 
-            elif user.role == 'manager':
+            elif hasattr(user, 'role'):
 
-                return redirect(
-                    'manager_dashboard'
-                )
+                if user.role == 'hr':
 
-            # EMPLOYEE
+                    return redirect('admin_dashboard')
+
+                elif user.role == 'manager':
+
+                    return redirect('manager_dashboard')
+
+                else:
+
+                    return redirect('employee_dashboard')
+
+            # FALLBACK
 
             else:
 
-                return redirect(
-                    'employee_dashboard'
-                )
+                return redirect('admin_dashboard')
 
-    return render(
-        request,
-        'login.html'
-    )
 
 
 def logout_view(request):
