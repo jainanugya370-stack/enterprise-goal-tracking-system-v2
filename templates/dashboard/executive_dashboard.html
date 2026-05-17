@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- HEADER -->
+
+    <div class="card border-0 shadow-lg mb-4">
+
+        <div class="card-body bg-dark text-white rounded">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h2>
+                        📊 Executive AI Dashboard
+                    </h2>
+
+                    <p class="mb-0">
+                        Enterprise Workforce Intelligence Platform
+                    </p>
+
+                </div>
+
+                <span class="badge bg-success p-2">
+                    LIVE ANALYTICS
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- KPI CARDS -->
+
+    <div class="row">
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-0 shadow-lg">
+
+                <div class="card-body">
+
+                    <h6>Total Employees</h6>
+
+                    <h2>
+                        {{ total_employees }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-0 shadow-lg">
+
+                <div class="card-body">
+
+                    <h6>Total Goals</h6>
+
+                    <h2>
+                        {{ total_goals }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-0 shadow-lg">
+
+                <div class="card-body">
+
+                    <h6>Approved Goals</h6>
+
+                    <h2>
+                        {{ approved_goals }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-0 shadow-lg">
+
+                <div class="card-body">
+
+                    <h6>Avg Achievement</h6>
+
+                    <h2>
+                        {{ average_achievement }}%
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOP PERFORMERS -->
+
+    <div class="card border-0 shadow-lg mb-4">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+                🏆 Top Performers
+            </h4>
+
+            <ul class="list-group">
+
+                {% for employee, score in top_performers %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>{{ employee }}</span>
+
+                        <span class="badge bg-success">
+                            {{ score }}
+                        </span>
+
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- RISK EMPLOYEES -->
+
+    <div class="card border-0 shadow-lg mb-4">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+                ⚠️ Risk Employees
+            </h4>
+
+            <ul class="list-group">
+
+                {% for employee in risk_employees %}
+
+                    <li class="list-group-item">
+
+                        {{ employee }}
+
+                    </li>
+
+                {% empty %}
+
+                    <li class="list-group-item">
+
+                        No high-risk employees detected.
+
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- AI SUMMARY -->
+
+    <div class="card border-0 shadow-lg">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+                🤖 AI Executive Summary
+            </h4>
+
+            <div class="bg-light rounded p-4">
+
+                <pre style="white-space: pre-wrap;">{{ ai_summary }}</pre>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
