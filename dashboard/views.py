@@ -1,22 +1,30 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 from goals.models import Goal, GoalUpdate
 from goals.utils import (
     calculate_employee_performance,
     get_performance_rating,
     calculate_goal_completion
 )
+
 from accounts.models import User, Department
+
 from dashboard.ai_engine import (
     generate_ai_insights,
     generate_ai_copilot_response,
     generate_executive_ai_summary
 )
+
 from dashboard.utils.prompt_builder import (
     build_employee_analysis_prompt
 )
-from django.http import JsonResponse
 
+
+# =========================
+# AI COPILOT AJAX
+# =========================
 
 def ai_copilot_ajax(request):
 
@@ -38,6 +46,11 @@ def ai_copilot_ajax(request):
     })
 
 
+# =========================
+# EXECUTIVE DASHBOARD
+# =========================
+
+@login_required
 def executive_dashboard(request):
 
     executive_data = generate_executive_ai_summary()
@@ -49,6 +62,11 @@ def executive_dashboard(request):
     )
 
 
+# =========================
+# AI EMPLOYEE INSIGHTS
+# =========================
+
+@login_required
 def ai_employee_insights(request):
 
     employee = request.user
@@ -104,11 +122,12 @@ def ai_employee_insights(request):
     )
 
 
+# =========================
+# EMPLOYEE DASHBOARD
+# =========================
+
 @login_required
 def employee_dashboard(request):
-
-    if request.user.is_superuser:
-        return redirect('admin_dashboard')
 
     if request.user.is_staff:
         return redirect('manager_dashboard')
@@ -137,6 +156,7 @@ def employee_dashboard(request):
         )
 
     context = {
+        'goals': goals,
         'total_goals': total_goals,
         'approved_goals': approved_goals,
         'completed_goals': completed_goals,
@@ -149,6 +169,10 @@ def employee_dashboard(request):
         context
     )
 
+
+# =========================
+# EMPLOYEE ANALYTICS
+# =========================
 
 @login_required
 def employee_analytics(request):
@@ -216,6 +240,10 @@ def employee_analytics(request):
     )
 
 
+# =========================
+# MANAGER DASHBOARD
+# =========================
+
 @login_required
 def manager_dashboard(request):
 
@@ -230,6 +258,10 @@ def manager_dashboard(request):
         'dashboard/manager_dashboard.html'
     )
 
+
+# =========================
+# MANAGER ANALYTICS
+# =========================
 
 @login_required
 def manager_analytics(request):
@@ -270,6 +302,10 @@ def manager_analytics(request):
         context
     )
 
+
+# =========================
+# ADMIN DASHBOARD
+# =========================
 
 @login_required
 def admin_dashboard(request):
@@ -356,6 +392,11 @@ def admin_dashboard(request):
     )
 
 
+# =========================
+# DEPARTMENT ANALYTICS
+# =========================
+
+@login_required
 def department_analytics(request):
 
     departments = Department.objects.all()
@@ -382,15 +423,18 @@ def department_analytics(request):
     )
 
 
+# =========================
+# AI COPILOT PAGE
+# =========================
+
+@login_required
 def ai_copilot(request):
 
     response = None
 
     if request.method == "POST":
 
-        question = request.POST.get(
-            "question"
-        )
+        question = request.POST.get("question")
 
         response = generate_ai_copilot_response(
             request.user,
