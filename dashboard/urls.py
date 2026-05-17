@@ -45,4 +45,10 @@ urlpatterns = [
         name='ai_insights'
     ),
 
+    path(
+        'ai-copilot/',
+        views.ai_copilot,
+        name='ai_copilot'
+    ),
+
 ]

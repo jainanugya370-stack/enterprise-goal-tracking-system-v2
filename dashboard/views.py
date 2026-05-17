@@ -13,7 +13,9 @@ from django.shortcuts import render
 from goals.models import Goal, GoalUpdate
 from dashboard.ai_engine import generate_ai_insights
 from dashboard.utils.prompt_builder import build_employee_analysis_prompt
-
+from dashboard.ai_engine import (
+    generate_ai_copilot_response
+)
 
 def ai_employee_insights(request):
 
@@ -279,4 +281,29 @@ def department_analytics(request):
         {
             'analytics': analytics
         }
+    )
+
+def ai_copilot(request):
+
+    response = None
+
+    if request.method == "POST":
+
+        question = request.POST.get(
+            "question"
+        )
+
+        response = generate_ai_copilot_response(
+            request.user,
+            question
+        )
+
+    context = {
+        "response": response
+    }
+
+    return render(
+        request,
+        "dashboard/ai_copilot.html",
+        context
     )
