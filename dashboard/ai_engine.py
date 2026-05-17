@@ -1,50 +1,53 @@
 from goals.models import Goal, GoalUpdate
 from django.db.models import Avg
 import requests
-
+from django.conf import settings
+import google.generativeai as genai
 
 def generate_ai_insights(prompt):
 
     try:
 
-        response = requests.post(
+        # LOCAL OLLAMA
+        if settings.OLLAMA_ENABLED:
 
-            "http://localhost:11434/api/generate",
+            response = requests.post(
 
-            json={
-                "model": "phi3:mini",
-                "prompt": prompt,
-                "stream": False,
-                # Limit output tokens so model responds faster
-                "options": {
-                    "num_predict": 300,
-                    "temperature": 0.7
-                }
-            },
+                "http://localhost:11434/api/generate",
 
-            timeout=180
+                json={
+                    "model": "phi3:mini",
+                    "prompt": prompt,
+                    "stream": False,
+                    "options": {
+                        "num_predict": 300,
+                        "temperature": 0.7
+                    }
+                },
 
-        )
+                timeout=180
 
-        if response.status_code != 200:
-            return "AI service is currently unavailable. Please try again later."
+            )
 
-        data = response.json()
-        ai_text = data.get("response", "")
+            if response.status_code != 200:
+                return "AI service unavailable."
 
-        if not ai_text.strip():
-            return "AI generated an empty response. Please try again."
+            data = response.json()
+            return data.get("response", "")
 
-        return ai_text
+        # PRODUCTION GEMINI
+        else:
 
-    except requests.exceptions.ConnectionError:
-        return "Unable to connect to Ollama. Please make sure Ollama is running (run: ollama serve)."
+            genai.configure(api_key=settings.GEMINI_API_KEY)
 
-    except requests.exceptions.Timeout:
-        return "AI response timed out. The model is taking too long — please try again in a moment."
+            model = genai.GenerativeModel("gemini-1.5-flash")
+
+            response = model.generate_content(prompt)
+
+            return response.text
 
     except Exception as e:
-        return f"Unexpected AI error: {str(e)}"
+        return f"AI Error: {str(e)}"
 
 
 def generate_employee_insight(employee):
