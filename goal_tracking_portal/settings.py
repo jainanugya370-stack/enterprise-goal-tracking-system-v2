@@ -35,6 +35,12 @@ ALLOWED_HOSTS = os.getenv(
     "127.0.0.1,localhost"
 ).split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://enterprise-goal-tracking-system-v2.onrender.com",
+]
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
