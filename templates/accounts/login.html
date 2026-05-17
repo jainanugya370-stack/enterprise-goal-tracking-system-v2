@@ -6,13 +6,16 @@
 
     <div class="login-card">
 
-        <h2 class="login-title">
-            Welcome Back
-        </h2>
+        <h2 class="login-title">Welcome Back</h2>
 
-        <p class="login-subtitle">
-            Login to Goal Tracking Portal
-        </p>
+        <p class="login-subtitle">Login to GoalSync Portal</p>
+
+        {% if error %}
+            <div style="background:#fee2e2; color:#991b1b; padding:12px 16px;
+                        border-radius:10px; font-size:13px; margin-bottom:20px;">
+                {{ error }}
+            </div>
+        {% endif %}
 
         <form method="POST" class="form-modern">
 
@@ -22,6 +25,7 @@
                 type="text"
                 name="username"
                 placeholder="Enter Username"
+                autocomplete="username"
                 required
             >
 
@@ -29,13 +33,11 @@
                 type="password"
                 name="password"
                 placeholder="Enter Password"
+                autocomplete="current-password"
                 required
             >
 
-            <button
-                type="submit"
-                class="btn-modern w-100"
-            >
+            <button type="submit" class="btn-modern w-100">
                 Login
             </button>
 
