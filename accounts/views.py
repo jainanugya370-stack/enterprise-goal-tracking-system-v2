@@ -5,7 +5,23 @@ from django.contrib.auth import (
     login,
     logout
 )
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
+User = get_user_model()
+
+
+def create_demo_user(request):
+
+    if not User.objects.filter(username="admin").exists():
+
+        User.objects.create_superuser(
+            username="admin",
+            email="admin@test.com",
+            password="admin123"
+        )
+
+    return HttpResponse("Demo superuser created.")
 
 def login_view(request):
 
@@ -63,3 +79,4 @@ def logout_view(request):
     logout(request)
 
     return redirect('login')
+
