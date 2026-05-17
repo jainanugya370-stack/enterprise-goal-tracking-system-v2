@@ -19,6 +19,33 @@ from dashboard.ai_engine import (
 from dashboard.ai_engine import (
     generate_executive_ai_summary
 )
+from django.http import JsonResponse
+
+def ai_copilot_ajax(request):
+
+    if request.method == "POST":
+
+        question = request.POST.get(
+            "question"
+        )
+
+        response = generate_ai_copilot_response(
+            request.user,
+            question
+        )
+
+        return JsonResponse({
+
+            "response": response
+
+        })
+
+    return JsonResponse({
+
+        "response": "Invalid request"
+
+    })
+
 
 def executive_dashboard(request):
 
