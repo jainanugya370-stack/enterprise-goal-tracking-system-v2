@@ -270,3 +270,131 @@ def generate_ai_copilot_response(employee, question):
     """
 
     return generate_ai_insights(prompt)
+
+from django.db.models import Avg
+
+
+def generate_executive_ai_summary():
+
+    goals = Goal.objects.all()
+
+    updates = GoalUpdate.objects.all()
+
+    total_employees = Goal.objects.values(
+        'employee'
+    ).distinct().count()
+
+    total_goals = goals.count()
+
+    approved_goals = goals.filter(
+        status='approved'
+    ).count()
+
+    total_achievement = updates.aggregate(
+        Avg('achievement_value')
+    )['achievement_value__avg']
+
+    if not total_achievement:
+        total_achievement = 0
+
+    top_performers = []
+
+    employee_scores = {}
+
+    for update in updates:
+
+        employee = update.goal.employee.username
+
+        if employee not in employee_scores:
+
+            employee_scores[employee] = 0
+
+        employee_scores[employee] += (
+            update.achievement_value
+        )
+
+    sorted_employees = sorted(
+        employee_scores.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    top_performers = sorted_employees[:5]
+
+    risk_employees = []
+
+    for employee, score in sorted_employees:
+
+        if score < 50:
+
+            risk_employees.append(employee)
+
+    prompt = f"""
+
+    You are an enterprise HR AI strategist.
+
+    Analyze this organization.
+
+    TOTAL EMPLOYEES:
+    {total_employees}
+
+    TOTAL GOALS:
+    {total_goals}
+
+    APPROVED GOALS:
+    {approved_goals}
+
+    AVERAGE ACHIEVEMENT:
+    {round(total_achievement, 2)}
+
+    TOP PERFORMERS:
+    {top_performers}
+
+    RISK EMPLOYEES:
+    {risk_employees}
+
+    Generate:
+
+    1. Organization Performance Summary
+
+    2. Productivity Analysis
+
+    3. Workforce Risk Analysis
+
+    4. Department Improvement Suggestions
+
+    5. HR Strategic Recommendations
+
+    6. Growth Opportunities
+
+    Keep it executive-level and professional.
+    """
+
+    ai_summary = generate_ai_insights(
+        prompt
+    )
+
+    return {
+
+        "total_employees":
+            total_employees,
+
+        "total_goals":
+            total_goals,
+
+        "approved_goals":
+            approved_goals,
+
+        "average_achievement":
+            round(total_achievement, 2),
+
+        "top_performers":
+            top_performers,
+
+        "risk_employees":
+            risk_employees,
+
+        "ai_summary":
+            ai_summary
+
+    }
