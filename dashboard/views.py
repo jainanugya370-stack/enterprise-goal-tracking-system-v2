@@ -16,6 +16,25 @@ from dashboard.utils.prompt_builder import build_employee_analysis_prompt
 from dashboard.ai_engine import (
     generate_ai_copilot_response
 )
+from dashboard.ai_engine import (
+    generate_executive_ai_summary
+)
+
+def executive_dashboard(request):
+
+    executive_data = (
+        generate_executive_ai_summary()
+    )
+
+    return render(
+
+        request,
+
+        "dashboard/executive_dashboard.html",
+
+        executive_data
+
+    )
 
 def ai_employee_insights(request):
 

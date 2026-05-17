@@ -51,4 +51,10 @@ urlpatterns = [
         name='ai_copilot'
     ),
 
+    path(
+        'executive-dashboard/',
+        views.executive_dashboard,
+        name='executive_dashboard'
+    ),
+
 ]
