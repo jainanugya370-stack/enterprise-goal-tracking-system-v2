@@ -23,13 +23,14 @@ def create_demo_user(request):
 
     return HttpResponse("Demo superuser created.")
 
+
+
 def login_view(request):
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        username = request.POST.get('username')
-
-        password = request.POST.get('password')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         user = authenticate(
             request,
@@ -38,36 +39,16 @@ def login_view(request):
         )
 
         if user is not None:
-
             login(request, user)
+            return redirect("dashboard")
 
-            # SUPERUSER
+        return render(
+            request,
+            "accounts/login.html",
+            {"error": "Invalid credentials"}
+        )
 
-            if user.is_superuser:
-
-                return redirect('admin_dashboard')
-
-            # ROLE BASED USERS
-
-            elif hasattr(user, 'role'):
-
-                if user.role == 'hr':
-
-                    return redirect('admin_dashboard')
-
-                elif user.role == 'manager':
-
-                    return redirect('manager_dashboard')
-
-                else:
-
-                    return redirect('employee_dashboard')
-
-            # FALLBACK
-
-            else:
-
-                return redirect('admin_dashboard')
+    return render(request, "accounts/login.html")
 
 
 
