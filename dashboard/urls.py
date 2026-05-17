@@ -57,4 +57,9 @@ urlpatterns = [
         name='executive_dashboard'
     ),
 
+    path(
+        'ai-copilot-ajax/',
+        views.ai_copilot_ajax,
+        name='ai_copilot_ajax'
+    ),
 ]
