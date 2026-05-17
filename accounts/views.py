@@ -1,10 +1,5 @@
 from django.shortcuts import render, redirect
-
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout
-)
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 
@@ -24,7 +19,6 @@ def create_demo_user(request):
     return HttpResponse("Demo superuser created.")
 
 
-
 def login_view(request):
 
     if request.method == "POST":
@@ -39,8 +33,22 @@ def login_view(request):
         )
 
         if user is not None:
+
             login(request, user)
-            return redirect("dashboard")
+
+            # ROLE-BASED REDIRECTS
+
+            if user.is_superuser:
+                return redirect("/dashboard/admin/")
+
+            elif user.role == "manager":
+                return redirect("/dashboard/manager/")
+
+            elif user.role == "employee":
+                return redirect("/dashboard/employee/")
+
+            else:
+                return redirect("/")
 
         return render(
             request,
@@ -51,10 +59,8 @@ def login_view(request):
     return render(request, "accounts/login.html")
 
 
-
 def logout_view(request):
 
     logout(request)
 
     return redirect('login')
-
