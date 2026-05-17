@@ -2,14 +2,21 @@
 __pycache__/
 *.pyc
 
-# Virtual Environment
-.venv/
+# Virtual environment
+venv/
+env/
 
 # Database
 db.sqlite3
 
+# Environment
+.env
+
 # Static
 staticfiles/
+
+# Media
+media/
 
 # IDE
 .idea/
@@ -17,5 +24,3 @@ staticfiles/
 
 # OS
 .DS_Store
-
-.env
