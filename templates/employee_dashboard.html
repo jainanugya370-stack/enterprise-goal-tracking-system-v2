@@ -6,7 +6,7 @@
 
     <!-- PAGE HEADER -->
 
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="d-flex justify-content-between align-items-start mb-5">
 
         <div>
 
@@ -14,22 +14,15 @@
                 Employee Dashboard
             </h1>
 
-            <p class="page-subtitle">
+            <p class="page-subtitle" style="margin-top:6px;">
                 Track goals, monitor performance and manage progress efficiently.
             </p>
 
         </div>
 
-        <div>
-
-            <a
-                href="/goals/my-goals/"
-                class="btn-modern"
-            >
-                My Goals
-            </a>
-
-        </div>
+        <a href="/goals/my-goals/" class="btn-modern" style="margin-top:6px;">
+            My Goals
+        </a>
 
     </div>
 
@@ -37,65 +30,32 @@
 
     <div class="row g-4 mb-5">
 
-        <!-- ACTIVE GOALS -->
-
         <div class="col-xl-4 col-md-6">
-
             <div class="kpi-card">
-
-                <div class="kpi-title">
-                    Active Goals
-                </div>
-
-                <div class="kpi-value">
-                    12
-                </div>
-
+                <div class="kpi-title">Active Goals</div>
+                <div class="kpi-value">12</div>
             </div>
-
         </div>
 
-        <!-- PERFORMANCE SCORE -->
-
         <div class="col-xl-4 col-md-6">
-
             <div class="kpi-card">
-
-                <div class="kpi-title">
-                    Performance Score
-                </div>
-
-                <div class="kpi-value">
-                    87%
-                </div>
-
+                <div class="kpi-title">Performance Score</div>
+                <div class="kpi-value">87%</div>
             </div>
-
         </div>
-
-        <!-- COMPLETED GOALS -->
 
         <div class="col-xl-4 col-md-12">
-
             <div class="kpi-card">
-
-                <div class="kpi-title">
-                    Completed Goals
-                </div>
-
-                <div class="kpi-value">
-                    8
-                </div>
-
+                <div class="kpi-title">Completed Goals</div>
+                <div class="kpi-value">8</div>
             </div>
-
         </div>
 
     </div>
 
-    <!-- MAIN DASHBOARD SECTION -->
+    <!-- MAIN CONTENT -->
 
-    <div class="row g-4">
+    <div class="row g-4 mb-4">
 
         <!-- LEFT PANEL -->
 
@@ -103,70 +63,59 @@
 
             <div class="card-modern h-100">
 
-                <div class="d-flex justify-content-between align-items-start mb-4">
+                <h3 style="font-size:18px; font-weight:700; margin-bottom:10px;">
+                    Goal Progress Overview
+                </h3>
 
-                    <div>
+                <p class="text-muted" style="font-size:14px; line-height:1.7; margin-bottom:0;">
+                    Manage assigned goals, monitor updates and track achievements across all performance metrics.
+                </p>
 
-                        <h3 class="mb-2">
-                            Goal Progress Overview
-                        </h3>
+                <!-- ACTION BUTTONS — each on its own row with generous spacing -->
 
-                        <p class="text-muted mb-0">
-                            Manage assigned goals, monitor updates and track achievements across all performance metrics.
-                        </p>
+                <div style="margin-top:36px; display:flex; flex-direction:column; gap:12px;">
+
+                    <div class="action-row" style="margin-top:0;">
+
+                        <a href="/goals/my-goals/" class="btn-modern">
+                            View My Goals
+                        </a>
+
+                        <a href="/dashboard/employee-analytics/"
+                           class="btn btn-light border rounded-3 px-4 py-2"
+                           style="font-size:14px; font-weight:500;">
+                            View Analytics
+                        </a>
+
+                        <a href="/reports/employee-pdf/"
+                           class="btn btn-outline-dark rounded-3 px-4 py-2"
+                           style="font-size:14px; font-weight:500;">
+                            Export PDF
+                        </a>
 
                     </div>
 
-                </div>
+                    <div class="action-row" style="margin-top:0;">
 
-                <!-- ACTION BUTTONS -->
+                        <a href="{% url 'ai_insights' %}"
+                           class="btn btn-outline-dark rounded-3 px-4 py-2"
+                           style="font-size:14px; font-weight:500;">
+                            🤖 AI Insights
+                        </a>
 
-                <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a href="{% url 'ai_copilot' %}"
+                           class="btn btn-outline-dark rounded-3 px-4 py-2"
+                           style="font-size:14px; font-weight:500;">
+                            🤖 AI Copilot
+                        </a>
 
-                    <a
-                        href="/goals/my-goals/"
-                        class="btn-modern"
-                    >
-                        View My Goals
-                    </a>
+                        <a href="{% url 'executive_dashboard' %}"
+                           class="btn btn-outline-dark rounded-3 px-4 py-2"
+                           style="font-size:14px; font-weight:500;">
+                            📊 Executive Dashboard
+                        </a>
 
-                    <a
-                        href="/dashboard/employee-analytics/"
-                        class="btn btn-light border rounded-4 px-4 py-2"
-                    >
-                        View Analytics
-                    </a>
-
-                    <a
-                        href="/reports/employee-pdf/"
-                        class="btn btn-dark rounded-4 px-4 py-2"
-                    >
-                        Export PDF
-                    </a>
-
-                    <a
-                        href="{% url 'ai_insights' %}"
-                        class="btn btn-outline-dark rounded-4 px-4 py-2"
-                    >
-                        🤖 AI Insights
-                    </a>
-
-                    <a
-                       href="{% url 'ai_copilot' %}"
-                       class="btn btn-dark"
-                    >
-                       🤖 AI Copilot
-
-                    </a>
-
-                    <a
-                       href="{% url 'executive_dashboard' %}"
-                       class="btn btn-dark"
-                    >
-
-                       📊 Executive Dashboard
-
-                    </a>
+                    </div>
 
                 </div>
 
@@ -175,55 +124,33 @@
                 <div class="row mt-5 g-4">
 
                     <div class="col-md-6">
-
                         <div class="ai-insight-box">
-
-                            <h5 class="mb-3">
+                            <h5 style="font-size:14px; font-weight:600; margin-bottom:10px;">
                                 Productivity Status
                             </h5>
-
-                            <p class="text-muted mb-3">
-                                You are currently maintaining a strong performance trend this month.
+                            <p class="text-muted" style="font-size:13px; margin-bottom:14px; line-height:1.6;">
+                                Maintaining a strong performance trend this month.
                             </p>
-
-                            <div class="progress"
-                                 style="height:10px; border-radius:999px;">
-
-                                <div
-                                    class="progress-bar"
-                                    style="width:82%;">
-                                </div>
-
+                            <div class="progress" style="height:8px; border-radius:999px;">
+                                <div class="progress-bar" style="width:82%;"></div>
                             </div>
-
+                            <small class="text-muted" style="margin-top:8px; display:block;">82%</small>
                         </div>
-
                     </div>
 
                     <div class="col-md-6">
-
                         <div class="ai-insight-box">
-
-                            <h5 class="mb-3">
+                            <h5 style="font-size:14px; font-weight:600; margin-bottom:10px;">
                                 Goal Completion
                             </h5>
-
-                            <p class="text-muted mb-3">
-                                Most assigned goals are currently on track for completion.
+                            <p class="text-muted" style="font-size:13px; margin-bottom:14px; line-height:1.6;">
+                                Most assigned goals are on track for completion.
                             </p>
-
-                            <div class="progress"
-                                 style="height:10px; border-radius:999px;">
-
-                                <div
-                                    class="progress-bar bg-dark"
-                                    style="width:68%;">
-                                </div>
-
+                            <div class="progress" style="height:8px; border-radius:999px;">
+                                <div class="progress-bar bg-dark" style="width:68%;"></div>
                             </div>
-
+                            <small class="text-muted" style="margin-top:8px; display:block;">68%</small>
                         </div>
-
                     </div>
 
                 </div>
@@ -238,68 +165,32 @@
 
             <div class="card-modern h-100">
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 style="font-size:16px; font-weight:700; margin-bottom:6px;">
+                    Performance Status
+                </h4>
 
-                    <div>
-
-                        <h4 class="mb-1">
-                            Performance Status
-                        </h4>
-
-                        <p class="text-muted mb-0">
-                            Current monthly progress.
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <!-- STATUS CARD -->
+                <p class="text-muted" style="font-size:13px; margin-bottom:28px;">
+                    Current monthly progress overview.
+                </p>
 
                 <div class="ai-insight-box mb-4">
-
-                    <h6 class="mb-3">
+                    <h6 style="font-size:13px; font-weight:600; margin-bottom:12px;">
                         Monthly Progress
                     </h6>
-
-                    <div class="progress mb-3"
-                         style="height:12px; border-radius:999px;">
-
-                        <div
-                            class="progress-bar"
-                            style="width:78%;">
-                        </div>
-
+                    <div class="progress mb-3" style="height:10px; border-radius:999px;">
+                        <div class="progress-bar" style="width:78%;"></div>
                     </div>
-
-                    <small class="text-muted">
-                        78% performance achieved this month.
-                    </small>
-
+                    <small class="text-muted">78% performance achieved this month.</small>
                 </div>
 
-                <!-- STATUS CARD -->
-
                 <div class="ai-insight-box">
-
-                    <h6 class="mb-3">
+                    <h6 style="font-size:13px; font-weight:600; margin-bottom:12px;">
                         Goal Completion
                     </h6>
-
-                    <div class="progress mb-3"
-                         style="height:12px; border-radius:999px;">
-
-                        <div
-                            class="progress-bar bg-dark"
-                            style="width:65%;">
-                        </div>
-
+                    <div class="progress mb-3" style="height:10px; border-radius:999px;">
+                        <div class="progress-bar bg-dark" style="width:65%;"></div>
                     </div>
-
-                    <small class="text-muted">
-                        65% goals successfully completed.
-                    </small>
-
+                    <small class="text-muted">65% goals successfully completed.</small>
                 </div>
 
             </div>

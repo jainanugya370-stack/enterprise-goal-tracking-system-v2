@@ -4,116 +4,74 @@
 
 <div class="container-fluid">
 
-    <!-- PAGE HEADER -->
+    <div class="mb-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="page-title">Team Performance Dashboard</h1>
 
-        <div>
-
-            <h1 class="page-title">
-                Team Performance Dashboard
-            </h1>
-
-            <p class="page-subtitle">
-                Monitor employee rankings, performance scores and overall team productivity.
-            </p>
-
-        </div>
+        <p class="page-subtitle" style="margin-top:6px;">
+            Monitor employee rankings, performance scores and overall team productivity.
+        </p>
 
     </div>
 
-    <!-- LEADERBOARD CARD -->
-
     <div class="card-modern">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 style="font-size:18px; font-weight:700; margin-bottom:6px;">
+            Team Leaderboard
+        </h3>
 
-            <div>
+        <p class="text-muted" style="font-size:14px; margin-bottom:28px;">
+            Performance ranking based on goal completion and achievement scores.
+        </p>
 
-                <h3 class="mb-1">
-                    Team Leaderboard
-                </h3>
+        <div class="table-responsive">
 
-                <p class="text-muted mb-0">
-                    Performance ranking based on goal completion and achievement scores.
-                </p>
+            <table class="table-modern">
 
-            </div>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Employee</th>
+                        <th>Performance Score</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in leaderboard %}
+                    <tr>
+
+                        <td><strong>#{{ forloop.counter }}</strong></td>
+
+                        <td>{{ item.employee.username }}</td>
+
+                        <td>{{ item.score }}%</td>
+
+                        <td>
+                            {% if item.rating == 'Excellent' %}
+                                <span class="badge-modern badge-success">{{ item.rating }}</span>
+                            {% elif item.rating == 'Average' %}
+                                <span class="badge-modern badge-warning">{{ item.rating }}</span>
+                            {% else %}
+                                <span class="badge-modern badge-danger">{{ item.rating }}</span>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            No team data available yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
 
         </div>
-
-        <table class="table-modern">
-
-            <thead>
-
-                <tr>
-
-                    <th>Rank</th>
-                    <th>Employee</th>
-                    <th>Performance Score</th>
-                    <th>Rating</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                {% for item in leaderboard %}
-
-                <tr>
-
-                    <td>
-
-                        <strong>
-                            #{{ forloop.counter }}
-                        </strong>
-
-                    </td>
-
-                    <td>
-
-                        {{ item.employee.username }}
-
-                    </td>
-
-                    <td>
-
-                        {{ item.score }}%
-
-                    </td>
-
-                    <td>
-
-                        {% if item.rating == 'Excellent' %}
-
-                            <span class="badge-modern badge-success">
-                                {{ item.rating }}
-                            </span>
-
-                        {% elif item.rating == 'Average' %}
-
-                            <span class="badge-modern badge-warning">
-                                {{ item.rating }}
-                            </span>
-
-                        {% else %}
-
-                            <span class="badge-modern badge-danger">
-                                {{ item.rating }}
-                            </span>
-
-                        {% endif %}
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
 
     </div>
 

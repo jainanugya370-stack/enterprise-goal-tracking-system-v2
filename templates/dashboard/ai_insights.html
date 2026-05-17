@@ -2,49 +2,62 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container-fluid">
 
-    <div class="row justify-content-center">
+    <!-- HEADER -->
 
-        <div class="col-lg-10">
+    <div class="card-modern mb-5"
+         style="background:#111827; border:none; padding:32px 36px;">
 
-            <div class="card border-0 shadow-lg">
+        <div class="d-flex justify-content-between align-items-center">
 
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <div>
 
-                    <h3 class="mb-0">
-                        🤖 AI Performance Intelligence
-                    </h3>
+                <h2 style="color:white; font-size:22px; font-weight:700; margin-bottom:6px;">
+                    🤖 AI Performance Intelligence
+                </h2>
 
-                    <span class="badge bg-success">
-                        LIVE AI
-                    </span>
-
-                </div>
-
-                <div class="card-body p-4">
-
-                    {% if ai_result %}
-
-                        <div class="bg-light rounded p-4">
-
-                            <pre style="white-space: pre-wrap; font-size:15px;">{{ ai_result }}</pre>
-
-                        </div>
-
-                    {% else %}
-
-                        <div class="alert alert-warning">
-                            AI insights unavailable.
-                        </div>
-
-                    {% endif %}
-
-                </div>
+                <p style="color:#9ca3af; margin:0; font-size:14px;">
+                    AI-generated analysis of your performance and goals.
+                </p>
 
             </div>
 
+            <span class="badge-modern badge-success">
+                LIVE AI
+            </span>
+
         </div>
+
+    </div>
+
+    <!-- AI RESULT -->
+
+    <div class="card-modern">
+
+        {% if ai_result %}
+
+            <h4 style="font-size:16px; font-weight:600; margin-bottom:20px;">
+                Performance Analysis
+            </h4>
+
+            <div class="ai-insight-box">
+
+                <pre style="white-space:pre-wrap; font-family:inherit; margin:0; font-size:14px; line-height:1.85;">{{ ai_result }}</pre>
+
+            </div>
+
+        {% else %}
+
+            <div style="text-align:center; padding:48px 0;">
+
+                <p style="color:#6b7280; font-size:15px;">
+                    AI insights are currently unavailable. Please try again later.
+                </p>
+
+            </div>
+
+        {% endif %}
 
     </div>
 

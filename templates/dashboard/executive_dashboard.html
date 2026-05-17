@@ -2,33 +2,30 @@
 
 {% block content %}
 
-<div class="container-fluid mt-4">
+<div class="container-fluid">
 
     <!-- HEADER -->
 
-    <div class="card border-0 shadow-lg mb-4">
+    <div class="card-modern mb-5"
+         style="background:#111827; border:none; padding:32px 36px;">
 
-        <div class="card-body bg-dark text-white rounded">
+        <div class="d-flex justify-content-between align-items-center">
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div>
 
-                <div>
+                <h2 style="color:white; font-size:22px; font-weight:700; margin-bottom:6px;">
+                    📊 Executive AI Dashboard
+                </h2>
 
-                    <h2>
-                        📊 Executive AI Dashboard
-                    </h2>
-
-                    <p class="mb-0">
-                        Enterprise Workforce Intelligence Platform
-                    </p>
-
-                </div>
-
-                <span class="badge bg-success p-2">
-                    LIVE ANALYTICS
-                </span>
+                <p style="color:#9ca3af; margin:0; font-size:14px;">
+                    Enterprise Workforce Intelligence Platform
+                </p>
 
             </div>
+
+            <span class="badge-modern badge-success">
+                LIVE ANALYTICS
+            </span>
 
         </div>
 
@@ -36,145 +33,117 @@
 
     <!-- KPI CARDS -->
 
-    <div class="row">
+    <div class="row g-4 mb-5">
 
-        <div class="col-md-3 mb-4">
-
-            <div class="card border-0 shadow-lg">
-
-                <div class="card-body">
-
-                    <h6>Total Employees</h6>
-
-                    <h2>
-                        {{ total_employees }}
-                    </h2>
-
-                </div>
-
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Employees</div>
+                <div class="kpi-value">{{ total_employees }}</div>
             </div>
-
         </div>
 
-        <div class="col-md-3 mb-4">
-
-            <div class="card border-0 shadow-lg">
-
-                <div class="card-body">
-
-                    <h6>Total Goals</h6>
-
-                    <h2>
-                        {{ total_goals }}
-                    </h2>
-
-                </div>
-
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Goals</div>
+                <div class="kpi-value">{{ total_goals }}</div>
             </div>
-
         </div>
 
-        <div class="col-md-3 mb-4">
-
-            <div class="card border-0 shadow-lg">
-
-                <div class="card-body">
-
-                    <h6>Approved Goals</h6>
-
-                    <h2>
-                        {{ approved_goals }}
-                    </h2>
-
-                </div>
-
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-title">Approved Goals</div>
+                <div class="kpi-value">{{ approved_goals }}</div>
             </div>
-
         </div>
 
-        <div class="col-md-3 mb-4">
-
-            <div class="card border-0 shadow-lg">
-
-                <div class="card-body">
-
-                    <h6>Avg Achievement</h6>
-
-                    <h2>
-                        {{ average_achievement }}%
-                    </h2>
-
-                </div>
-
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-title">Avg Achievement</div>
+                <div class="kpi-value">{{ average_achievement }}%</div>
             </div>
-
         </div>
 
     </div>
 
-    <!-- TOP PERFORMERS -->
+    <!-- TOP PERFORMERS & RISK EMPLOYEES -->
 
-    <div class="card border-0 shadow-lg mb-4">
+    <div class="row g-4 mb-5">
 
-        <div class="card-body">
+        <div class="col-lg-6">
 
-            <h4 class="mb-4">
-                🏆 Top Performers
-            </h4>
+            <div class="card-modern h-100">
 
-            <ul class="list-group">
+                <h4 style="font-size:16px; font-weight:700; margin-bottom:6px;">
+                    🏆 Top Performers
+                </h4>
 
-                {% for employee, score in top_performers %}
+                <p class="text-muted" style="font-size:13px; margin-bottom:24px;">
+                    Highest scoring employees this period.
+                </p>
 
-                    <li class="list-group-item d-flex justify-content-between">
+                <div style="display:flex; flex-direction:column; gap:10px;">
 
-                        <span>{{ employee }}</span>
+                    {% for employee, score in top_performers %}
 
-                        <span class="badge bg-success">
-                            {{ score }}
-                        </span>
+                        <div style="display:flex; justify-content:space-between; align-items:center;
+                                    padding:14px 18px; background:#f9fafb; border-radius:12px;
+                                    border:1px solid #f1f5f9;">
 
-                    </li>
+                            <span style="font-size:14px; font-weight:500; color:#111827;">
+                                {{ employee }}
+                            </span>
 
-                {% endfor %}
+                            <span class="badge-modern badge-success">
+                                {{ score }}
+                            </span>
 
-            </ul>
+                        </div>
+
+                    {% empty %}
+
+                        <p class="text-muted" style="font-size:14px;">No data available.</p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
 
         </div>
 
-    </div>
+        <div class="col-lg-6">
 
-    <!-- RISK EMPLOYEES -->
+            <div class="card-modern h-100">
 
-    <div class="card border-0 shadow-lg mb-4">
+                <h4 style="font-size:16px; font-weight:700; margin-bottom:6px;">
+                    ⚠️ Risk Employees
+                </h4>
 
-        <div class="card-body">
+                <p class="text-muted" style="font-size:13px; margin-bottom:24px;">
+                    Employees requiring immediate attention.
+                </p>
 
-            <h4 class="mb-4">
-                ⚠️ Risk Employees
-            </h4>
+                <div style="display:flex; flex-direction:column; gap:10px;">
 
-            <ul class="list-group">
+                    {% for employee in risk_employees %}
 
-                {% for employee in risk_employees %}
+                        <div style="padding:14px 18px; background:#fff7f7; border-radius:12px;
+                                    border:1px solid #fee2e2; font-size:14px; color:#991b1b;">
+                            {{ employee }}
+                        </div>
 
-                    <li class="list-group-item">
+                    {% empty %}
 
-                        {{ employee }}
+                        <div style="padding:14px 18px; background:#f0fdf4; border-radius:12px;
+                                    border:1px solid #dcfce7; font-size:14px; color:#166534;">
+                            ✅ No high-risk employees detected.
+                        </div>
 
-                    </li>
+                    {% endfor %}
 
-                {% empty %}
+                </div>
 
-                    <li class="list-group-item">
-
-                        No high-risk employees detected.
-
-                    </li>
-
-                {% endfor %}
-
-            </ul>
+            </div>
 
         </div>
 
@@ -182,19 +151,19 @@
 
     <!-- AI SUMMARY -->
 
-    <div class="card border-0 shadow-lg">
+    <div class="card-modern">
 
-        <div class="card-body">
+        <h4 style="font-size:16px; font-weight:700; margin-bottom:6px;">
+            🤖 AI Executive Summary
+        </h4>
 
-            <h4 class="mb-4">
-                🤖 AI Executive Summary
-            </h4>
+        <p class="text-muted" style="font-size:13px; margin-bottom:24px;">
+            AI-generated organisational performance overview.
+        </p>
 
-            <div class="bg-light rounded p-4">
+        <div class="ai-insight-box">
 
-                <pre style="white-space: pre-wrap;">{{ ai_summary }}</pre>
-
-            </div>
+            <pre style="white-space:pre-wrap; font-family:inherit; margin:0; font-size:14px; line-height:1.85;">{{ ai_summary }}</pre>
 
         </div>
 
