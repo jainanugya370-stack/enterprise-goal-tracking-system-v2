@@ -43,46 +43,178 @@
             Ask about performance, goals, productivity or coaching recommendations.
         </p>
 
-        <form method="POST" class="form-modern">
+        <!-- AI FORM -->
+
+        <div class="form-modern">
 
             {% csrf_token %}
 
             <textarea
-                name="question"
+                id="question"
                 rows="5"
                 placeholder="Ask AI about performance, goals, productivity, coaching..."
                 required
                 style="resize:vertical;"
             ></textarea>
 
-            <button type="submit" class="btn-modern">
+            <button
+                id="ask-ai-btn"
+                type="button"
+                class="btn-modern"
+            >
                 🚀 Ask AI Copilot
             </button>
 
-        </form>
+        </div>
 
-        <!-- AI RESPONSE -->
+        <!-- LOADING SPINNER -->
 
-        {% if response %}
+        <div
+            id="loading-spinner"
+            style="display:none; margin-top:30px;"
+        >
 
-            <div style="margin-top:40px; border-top:1px solid #f1f5f9; padding-top:36px;">
+            <div class="d-flex align-items-center">
 
-                <h5 style="font-size:15px; font-weight:600; margin-bottom:16px;">
-                    🤖 AI Response
-                </h5>
-
-                <div class="ai-insight-box">
-
-                    <pre style="white-space:pre-wrap; font-family:inherit; margin:0; font-size:14px; line-height:1.8;">{{ response }}</pre>
-
+                <div
+                    class="spinner-border text-dark"
+                    role="status"
+                    style="width:24px; height:24px;"
+                >
                 </div>
+
+                <span style="margin-left:12px; font-size:14px;">
+                    AI is analyzing workforce intelligence...
+                </span>
 
             </div>
 
-        {% endif %}
+        </div>
+
+        <!-- AI RESPONSE -->
+
+        <div
+            id="ai-response-section"
+            style="display:none; margin-top:40px; border-top:1px solid #f1f5f9; padding-top:36px;"
+        >
+
+            <h5 style="font-size:15px; font-weight:600; margin-bottom:16px;">
+                🤖 AI Response
+            </h5>
+
+            <div class="ai-insight-box">
+
+                <pre
+                    id="ai-response-text"
+                    style="white-space:pre-wrap; font-family:inherit; margin:0; font-size:14px; line-height:1.8;"
+                ></pre>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+<!-- AJAX SCRIPT -->
+
+<script>
+
+document
+.getElementById(
+    "ask-ai-btn"
+)
+.addEventListener(
+    "click",
+    function () {
+
+        let question =
+            document.getElementById(
+                "question"
+            ).value;
+
+        if (!question.trim()) {
+
+            return;
+
+        }
+
+        let spinner =
+            document.getElementById(
+                "loading-spinner"
+            );
+
+        let responseSection =
+            document.getElementById(
+                "ai-response-section"
+            );
+
+        let responseText =
+            document.getElementById(
+                "ai-response-text"
+            );
+
+        // SHOW SPINNER
+
+        spinner.style.display = "block";
+
+        responseSection.style.display = "none";
+
+        fetch(
+            "/dashboard/ai-copilot-ajax/",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded",
+
+                    "X-CSRFToken":
+                        "{{ csrf_token }}"
+
+                },
+
+                body:
+                    "question=" +
+                    encodeURIComponent(question)
+
+            }
+
+        )
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            // HIDE SPINNER
+
+            spinner.style.display = "none";
+
+            // SHOW RESPONSE
+
+            responseSection.style.display = "block";
+
+            responseText.innerHTML =
+                data.response;
+
+        })
+
+        .catch(error => {
+
+            spinner.style.display = "none";
+
+            responseSection.style.display = "block";
+
+            responseText.innerHTML =
+                "AI service is temporarily unavailable.";
+
+        });
+
+    });
+
+</script>
 
 {% endblock %}
