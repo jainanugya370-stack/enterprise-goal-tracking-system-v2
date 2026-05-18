@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .models import Notification
 
 
+@login_required
 def notification_list(request):
 
     notifications = Notification.objects.filter(
@@ -10,8 +12,6 @@ def notification_list(request):
 
     return render(
         request,
-        'notifications.html',
-        {
-            'notifications': notifications
-        }
+        'dashboard/notifications.html',
+        {'notifications': notifications}
     )
