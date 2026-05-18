@@ -13,13 +13,13 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
-    "127.0.0.1,localhost"
+    "127.0.0.1,localhost,enterprise-goal-tracking-system-v2.onrender.com"
 ).split(",")
 
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
     "CSRF_TRUSTED_ORIGINS",
-    "http://127.0.0.1,http://localhost"
+    "http://127.0.0.1,http://localhost,https://enterprise-goal-tracking-system-v2.onrender.com"
 ).split(",")
 
 INSTALLED_APPS = [

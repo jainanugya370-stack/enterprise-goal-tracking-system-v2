@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from django.http import HttpResponse
+from goals.models import Goal
+from accounts.models import User
 
 User = get_user_model()
 
@@ -167,3 +170,39 @@ def list_users(request):
 
     html += "</pre>"
     return HttpResponse(html)
+
+def setup_demo_data(request):
+
+    employee = User.objects.filter(
+        username="employee1"
+    ).first()
+
+    if not employee:
+        return HttpResponse(
+            "Employee user not found. Run /setup-users/ first."
+        )
+
+    created = 0
+
+    for i in range(1, 6):
+
+        goal, was_created = Goal.objects.get_or_create(
+
+            employee=employee,
+
+            title=f"Quarterly Goal {i}",
+
+            defaults={
+                "description": f"Demo goal description {i}",
+                "target": 100,
+                "weightage": 20,
+                "status": "approved"
+            }
+        )
+
+        if was_created:
+            created += 1
+
+    return HttpResponse(
+        f"✅ Demo goals created successfully. Total created: {created}"
+    )
