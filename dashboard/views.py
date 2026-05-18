@@ -160,52 +160,44 @@ def manager_analytics(request):
 @login_required
 def admin_dashboard(request):
 
-    if not request.user.is_superuser:
-        if request.user.is_staff or request.user.role == 'manager':
-            return redirect('manager_dashboard')
-        return redirect('employee_dashboard')
+    total_employees = User.objects.filter(
+        role='employee'
+    ).count()
 
-    employees = User.objects.filter(is_staff=False, is_superuser=False)
-    managers  = User.objects.filter(is_staff=True,  is_superuser=False)
+    total_managers = User.objects.filter(
+        role='manager'
+    ).count()
 
-    total_employees = employees.count()
-    total_managers  = managers.count()
-    total_goals     = Goal.objects.count()
-    approved_goals  = Goal.objects.filter(status='approved').count()
-    pending_goals   = Goal.objects.filter(status='pending').count()
+    approved_goals = Goal.objects.filter(
+        status='approved'
+    ).count()
 
-    organization_scores = []
-    leaderboard         = []
+    total_goals = Goal.objects.count()
 
-    for employee in employees:
-        score = calculate_employee_performance(employee)
-        organization_scores.append(score)
-        leaderboard.append({
-            'employee': employee,
-            'score':    score,
-            'rating':   get_performance_rating(score),
-        })
-
-    average_score = 0
-    if organization_scores:
-        average_score = round(
-            sum(organization_scores) / len(organization_scores), 2
+    if total_goals > 0:
+        avg_performance = int(
+            (approved_goals / total_goals) * 100
         )
+    else:
+        avg_performance = 0
 
-    leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    top_performers = Goal.objects.filter(
+        status='approved'
+    ).select_related('employee')[:5]
 
     context = {
         'total_employees': total_employees,
-        'total_managers':  total_managers,
-        'total_goals':     total_goals,
-        'approved_goals':  approved_goals,
-        'pending_goals':   pending_goals,
-        'average_score':   average_score,
-        'leaderboard':     leaderboard,
-        'top_performers':  leaderboard[:5],
+        'total_managers': total_managers,
+        'approved_goals': approved_goals,
+        'avg_performance': avg_performance,
+        'top_performers': top_performers,
     }
 
-    return render(request, 'dashboard/admin_dashboard.html', context)
+    return render(
+        request,
+        'dashboard/admin_dashboard.html',
+        context
+    )
 
 
 # ─────────────────────────────────────────────

@@ -25,28 +25,36 @@
         <div class="col-md-3">
             <div class="kpi-card">
                 <div class="kpi-title">Total Employees</div>
-                <div class="kpi-value">{{ total_employees }}</div>
+                <div class="kpi-value">
+                    {{ total_employees }}
+                </div>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="kpi-card">
                 <div class="kpi-title">Total Managers</div>
-                <div class="kpi-value">{{ total_managers }}</div>
+                <div class="kpi-value">
+                    {{ total_managers }}
+                </div>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="kpi-card">
                 <div class="kpi-title">Approved Goals</div>
-                <div class="kpi-value">{{ approved_goals }}</div>
+                <div class="kpi-value">
+                    {{ approved_goals }}
+                </div>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="kpi-card">
                 <div class="kpi-title">Avg Performance</div>
-                <div class="kpi-value">{{ average_score }}%</div>
+                <div class="kpi-value">
+                    {{ avg_performance }}%
+                </div>
             </div>
         </div>
 
@@ -72,24 +80,45 @@
                     <tr>
                         <th>Rank</th>
                         <th>Employee</th>
-                        <th>Score</th>
+                        <th>Status</th>
                         <th>Rating</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    {% for item in leaderboard %}
+                    {% for goal in top_performers %}
+
                     <tr>
-                        <td><strong>#{{ forloop.counter }}</strong></td>
-                        <td>{{ item.employee.username }}</td>
-                        <td>{{ item.score }}%</td>
+
+                        <td>
+                            <strong>#{{ forloop.counter }}</strong>
+                        </td>
+
+                        <td>
+                            {{ goal.employee.username }}
+                        </td>
+
+                        <td>
+                            Approved
+                        </td>
+
                         <td>
                             <span class="badge-modern badge-success">
-                                {{ item.rating }}
+                                Excellent
                             </span>
                         </td>
+
                     </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4">
+                            No performance data available.
+                        </td>
+                    </tr>
+
                     {% endfor %}
 
                 </tbody>
