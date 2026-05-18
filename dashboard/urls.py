@@ -3,10 +3,9 @@ from . import views
 
 urlpatterns = [
 
-    # MAIN DEFAULT DASHBOARD
     path(
         '',
-        views.employee_dashboard,
+        views.dashboard_view,
         name='dashboard'
     ),
 
@@ -48,7 +47,7 @@ urlpatterns = [
 
     path(
         'ai-insights/',
-        views.ai_employee_insights,
+        views.ai_insights,
         name='ai_insights'
     ),
 
@@ -69,4 +68,11 @@ urlpatterns = [
         views.ai_copilot_ajax,
         name='ai_copilot_ajax'
     ),
+
+    path(
+        'setup-demo-data/',
+        views.setup_demo_data,
+        name='setup_demo_data'
+    ),
+
 ]
