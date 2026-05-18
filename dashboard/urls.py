@@ -40,30 +40,6 @@ urlpatterns = [
     ),
 
     path(
-        'ai-insights/',
-        views.ai_insights,
-        name='ai_insights'
-    ),
-
-    path(
-        'ai-copilot/',
-        views.ai_copilot,
-        name='ai_copilot'
-    ),
-
-    path(
-        'executive-dashboard/',
-        views.executive_dashboard,
-        name='executive_dashboard'
-    ),
-
-    path(
-        'ai-copilot-ajax/',
-        views.ai_copilot_ajax,
-        name='ai_copilot_ajax'
-    ),
-
-    path(
         'setup-demo-data/',
         views.setup_demo_data,
         name='setup_demo_data'
