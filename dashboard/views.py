@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from goals.models import Goal, GoalUpdate
 from goals.utils import (
@@ -30,15 +30,13 @@ import json
 @login_required
 def employee_dashboard(request):
 
-    # ✅ FIX: Guard superusers and staff away from employee dashboard
     if request.user.is_superuser:
         return redirect('admin_dashboard')
 
     if request.user.is_staff or request.user.role == 'manager':
         return redirect('manager_dashboard')
 
-    goals = Goal.objects.filter(employee=request.user)
-
+    goals           = Goal.objects.filter(employee=request.user)
     total_goals     = goals.count()
     approved_goals  = goals.filter(status='approved').count()
     completed_goals = goals.filter(status='completed').count()
@@ -134,7 +132,6 @@ def manager_analytics(request):
     if not request.user.is_staff and not request.user.is_superuser:
         return redirect('employee_analytics')
 
-    # ✅ Safe: returns empty list if no employees yet
     employees   = User.objects.filter(role='employee')
     leaderboard = []
 
@@ -224,10 +221,10 @@ def department_analytics(request):
     departments = Department.objects.all()
     analytics   = []
 
-    for department in departments:
+    for dept in departments:
         analytics.append({
-            'department':    department,
-            'employee_count': User.objects.filter(department=department).count(),
+            'department':    dept,
+            'employee_count': User.objects.filter(department=dept).count(),
         })
 
     return render(
@@ -265,7 +262,7 @@ def ai_employee_insights(request):
             f"Comment: {update.employee_comment}\n"
         )
 
-    prompt   = build_employee_analysis_prompt(employee, goal_text, update_text)
+    prompt    = build_employee_analysis_prompt(employee, goal_text, update_text)
     ai_result = generate_ai_insights(prompt)
 
     context = {
@@ -278,7 +275,7 @@ def ai_employee_insights(request):
 
 
 # ─────────────────────────────────────────────
-# AI COPILOT PAGE
+# AI COPILOT
 # ─────────────────────────────────────────────
 
 @login_required
@@ -297,10 +294,6 @@ def ai_copilot(request):
         {'response': response}
     )
 
-
-# ─────────────────────────────────────────────
-# AI COPILOT AJAX
-# ─────────────────────────────────────────────
 
 @login_required
 def ai_copilot_ajax(request):
@@ -323,3 +316,152 @@ def executive_dashboard(request):
 
     executive_data = generate_executive_ai_summary()
     return render(request, 'dashboard/executive_dashboard.html', executive_data)
+
+
+# ─────────────────────────────────────────────
+# DEMO DATA SETUP (browser-based, no shell)
+# Visit /dashboard/setup-demo-data/ once
+# ─────────────────────────────────────────────
+
+def setup_demo_data(request):
+    """
+    Creates realistic demo data:
+    - 3 departments
+    - 3 managers
+    - 6 employees assigned to departments
+    - 2-3 goals per employee
+    - goal updates with achievement values
+    """
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    log = []
+
+    # ── DEPARTMENTS ──────────────────────────────
+    dept_names = ['Engineering', 'Marketing', 'Operations']
+    departments = {}
+
+    for name in dept_names:
+        dept, created = Department.objects.get_or_create(name=name)
+        departments[name] = dept
+        if created:
+            log.append(f"✅ Department created: {name}")
+        else:
+            log.append(f"ℹ️  Department exists: {name}")
+
+    # ── MANAGERS ─────────────────────────────────
+    managers_data = [
+        {'username': 'manager_eng',  'password': 'Manager@1234', 'dept': 'Engineering'},
+        {'username': 'manager_mkt',  'password': 'Manager@1234', 'dept': 'Marketing'},
+        {'username': 'manager_ops',  'password': 'Manager@1234', 'dept': 'Operations'},
+    ]
+
+    managers = {}
+    for m in managers_data:
+        if not User.objects.filter(username=m['username']).exists():
+            user = User.objects.create_user(
+                username=m['username'],
+                password=m['password'],
+                email=f"{m['username']}@goalsync.com",
+            )
+            user.role       = 'manager'
+            user.is_staff   = True
+            user.department = departments[m['dept']]
+            user.save()
+            managers[m['dept']] = user
+            log.append(f"✅ Manager created: {m['username']}")
+        else:
+            managers[m['dept']] = User.objects.get(username=m['username'])
+            log.append(f"ℹ️  Manager exists: {m['username']}")
+
+    # ── EMPLOYEES ─────────────────────────────────
+    employees_data = [
+        {'username': 'alice',   'dept': 'Engineering', 'password': 'Employee@1234'},
+        {'username': 'bob',     'dept': 'Engineering', 'password': 'Employee@1234'},
+        {'username': 'carol',   'dept': 'Marketing',   'password': 'Employee@1234'},
+        {'username': 'david',   'dept': 'Marketing',   'password': 'Employee@1234'},
+        {'username': 'eve',     'dept': 'Operations',  'password': 'Employee@1234'},
+        {'username': 'frank',   'dept': 'Operations',  'password': 'Employee@1234'},
+    ]
+
+    employees = []
+    for e in employees_data:
+        if not User.objects.filter(username=e['username']).exists():
+            user = User.objects.create_user(
+                username=e['username'],
+                password=e['password'],
+                email=f"{e['username']}@goalsync.com",
+            )
+            user.role       = 'employee'
+            user.is_staff   = False
+            user.department = departments[e['dept']]
+            user.manager    = managers[e['dept']]
+            user.save()
+            log.append(f"✅ Employee created: {e['username']}")
+        else:
+            user = User.objects.get(username=e['username'])
+            log.append(f"ℹ️  Employee exists: {e['username']}")
+        employees.append(user)
+
+    # ── GOALS ─────────────────────────────────────
+    goals_data = [
+        {'title': 'Complete Q1 Sprint',        'target': 100, 'weightage': 40, 'status': 'approved'},
+        {'title': 'Improve Code Review Score', 'target': 90,  'weightage': 30, 'status': 'approved'},
+        {'title': 'Complete Training Program', 'target': 80,  'weightage': 30, 'status': 'submitted'},
+    ]
+
+    for employee in employees:
+        existing = Goal.objects.filter(employee=employee).count()
+        if existing == 0:
+            for g in goals_data:
+                Goal.objects.create(
+                    employee=employee,
+                    title=g['title'],
+                    description=f"Performance goal for {employee.username}",
+                    target=g['target'],
+                    weightage=g['weightage'],
+                    status=g['status'],
+                )
+            log.append(f"✅ Goals created for: {employee.username}")
+
+            # ── GOAL UPDATES ──────────────────────
+            approved_goals = Goal.objects.filter(
+                employee=employee, status='approved'
+            )
+            achievements = [75, 85, 90, 60, 95, 70]
+            for i, goal in enumerate(approved_goals):
+                GoalUpdate.objects.create(
+                    goal=goal,
+                    quarter='Q1',
+                    achievement_value=achievements[i % len(achievements)],
+                    employee_comment='Making steady progress on this goal.',
+                )
+            log.append(f"✅ Updates created for: {employee.username}")
+        else:
+            log.append(f"ℹ️  Goals exist for: {employee.username} ({existing} goals)")
+
+    # ── SUMMARY ───────────────────────────────────
+    html = "<h2>GoalSync Demo Data Setup</h2><pre>"
+    html += "\n".join(log)
+    html += f"""
+
+─────────────────────────────
+📊 Summary:
+   Departments : {Department.objects.count()}
+   Managers    : {User.objects.filter(role='manager').count()}
+   Employees   : {User.objects.filter(role='employee').count()}
+   Goals       : {Goal.objects.count()}
+   Updates     : {GoalUpdate.objects.count()}
+
+📋 Employee Logins (password: Employee@1234):
+   alice / bob / carol / david / eve / frank
+
+📋 Manager Logins (password: Manager@1234):
+   manager_eng / manager_mkt / manager_ops
+
+✅ Done! Go to /login/ to test.
+</pre>
+<a href="/login/">→ Go to Login</a> &nbsp;|&nbsp;
+<a href="/list-users/">→ List All Users</a>"""
+
+    return HttpResponse(html)
