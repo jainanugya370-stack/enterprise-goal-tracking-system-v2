@@ -8,7 +8,6 @@ User = get_user_model()
 
 def login_view(request):
 
-    # Already logged in — redirect to right dashboard
     if request.user.is_authenticated:
         return _role_redirect(request.user)
 
@@ -33,19 +32,10 @@ def login_view(request):
 
 
 def _role_redirect(user):
-    """
-    Central redirect logic — checks is_superuser and is_staff flags FIRST
-    (reliable), then falls back to role field.
-    Prevents redirect loops when role field is out of sync with flags.
-    """
     if user.is_superuser:
         return redirect("/dashboard/admin/")
-
-    # ✅ FIX: Check is_staff OR role == manager — covers users created via
-    # Django admin (is_staff=True but role may still be 'employee')
     if user.is_staff or user.role == "manager":
         return redirect("/dashboard/manager/")
-
     return redirect("/dashboard/employee/")
 
 
@@ -53,18 +43,127 @@ def logout_view(request):
     logout(request)
     return redirect("/login/")
 
+def setup_users(request):
+    """
+    Visit /setup-users/ to create all demo users at once.
+    """
+    users_to_create = [
+        {
+            'username':     'hr_admin',
+            'password':     'Admin@1234',
+            'email':        'admin@goalsync.com',
+            'role':         'hr',
+            'is_superuser': True,
+            'is_staff':     True,
+        },
+        {
+            'username':     'manager1',
+            'password':     'Manager@1234',
+            'email':        'manager@goalsync.com',
+            'role':         'manager',
+            'is_superuser': False,
+            'is_staff':     True,
+        },
+        {
+            'username':     'employee1',
+            'password':     'Employee@1234',
+            'email':        'employee1@goalsync.com',
+            'role':         'employee',
+            'is_superuser': False,
+            'is_staff':     False,
+        },
+        {
+            'username':     'employee2',
+            'password':     'Employee@1234',
+            'email':        'employee2@goalsync.com',
+            'role':         'employee',
+            'is_superuser': False,
+            'is_staff':     False,
+        },
+    ]
 
-def create_demo_user(request):
-    """
-    One-time helper to create a superuser on Render when DB is empty.
-    Remove or restrict this after first use.
-    """
-    if not User.objects.filter(username="hr_admin").exists():
-        User.objects.create_superuser(
-            username="hr_admin",
-            email="hr@goalsync.com",
-            password="admin123"
+    created = []
+    skipped = []
+
+    for u in users_to_create:
+        if User.objects.filter(username=u['username']).exists():
+            skipped.append(u['username'])
+            continue
+
+        user = User.objects.create_user(
+            username=u['username'],
+            password=u['password'],
+            email=u['email'],
         )
-        return HttpResponse("✅ hr_admin superuser created. Login at /login/")
+        user.role         = u['role']
+        user.is_superuser = u['is_superuser']
+        user.is_staff     = u['is_staff']
+        user.save()
+        created.append(u['username'])
 
-    return HttpResponse("ℹ️ hr_admin already exists.")
+    html = "<h2>GoalSync User Setup</h2><pre>"
+
+    if created:
+        html += "✅ Created:\n"
+        for u in created:
+            html += f"   {u}\n"
+
+    if skipped:
+        html += "\nℹ️ Already existed (skipped):\n"
+        for u in skipped:
+            html += f"   {u}\n"
+
+    html += """
+📋 Credentials:
+   hr_admin   /  Admin@1234    →  Admin Dashboard
+   manager1   /  Manager@1234  →  Manager Dashboard
+   employee1  /  Employee@1234 →  Employee Dashboard
+   employee2  /  Employee@1234 →  Employee Dashboard
+
+✅ Done. Go to /login/
+</pre><a href="/login/">→ Go to Login</a>"""
+
+    return HttpResponse(html)
+
+
+def reset_password(request, username, new_password):
+    """
+    Visit /reset-password/username/newpassword/ to reset a user's password.
+    Example: /reset-password/manager1/NewPass@123/
+    """
+    try:
+        user = User.objects.get(username=username)
+        user.set_password(new_password)
+        user.save()
+        return HttpResponse(
+            f"<pre>✅ Password for '{username}' updated to '{new_password}'</pre>"
+            f"<a href='/login/'>→ Go to Login</a>"
+        )
+    except User.DoesNotExist:
+        return HttpResponse(
+            f"<pre>❌ User '{username}' not found.\n"
+            f"Visit /setup-users/ first to create users.</pre>"
+        )
+
+
+def list_users(request):
+    """
+    Visit /list-users/ to see all users and their roles.
+    """
+    users = User.objects.all().values(
+        'username', 'email', 'role', 'is_staff', 'is_superuser', 'is_active'
+    )
+
+    html = "<h2>GoalSync — All Users</h2><pre>"
+    html += f"{'Username':<20} {'Role':<12} {'Staff':<8} {'Superuser':<12} Active\n"
+    html += "-" * 65 + "\n"
+
+    for u in users:
+        html += (
+            f"{u['username']:<20} {u['role']:<12} "
+            f"{str(u['is_staff']):<8} {str(u['is_superuser']):<12} "
+            f"{u['is_active']}\n"
+        )
+
+    html += "</pre>"
+    return HttpResponse(html)
